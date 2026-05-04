@@ -251,7 +251,7 @@ export default function HeartRateMonitor() {
     if (!ctx) return;
     const w = canvas.width;
     const h = canvas.height;
-    ctx.fillStyle = "#0a0a0a";
+    ctx.fillStyle = "#fafafa";
     ctx.fillRect(0, 0, w, h);
 
     const samples = samplesRef.current;
@@ -272,7 +272,7 @@ export default function HeartRateMonitor() {
     }
     const span = Math.max(1e-6, mx - mn);
 
-    ctx.strokeStyle = "#22d3ee";
+    ctx.strokeStyle = "#0e7490";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     for (let i = 0; i < xu.length; i++) {
@@ -283,7 +283,7 @@ export default function HeartRateMonitor() {
     }
     ctx.stroke();
 
-    ctx.fillStyle = "#737373";
+    ctx.fillStyle = "#525252";
     ctx.font = "11px ui-sans-serif, system-ui";
     ctx.fillText(
       `G−R chrominance, last ${(tu[tu.length - 1] - tu[0]).toFixed(1)}s`,
@@ -299,11 +299,11 @@ export default function HeartRateMonitor() {
     if (!ctx) return;
     const w = canvas.width;
     const h = canvas.height;
-    ctx.fillStyle = "#0a0a0a";
+    ctx.fillStyle = "#fafafa";
     ctx.fillRect(0, 0, w, h);
 
     if (!peak) {
-      ctx.fillStyle = "#737373";
+      ctx.fillStyle = "#525252";
       ctx.font = "11px ui-sans-serif, system-ui";
       ctx.fillText("Spectrum (collecting…)", 6, 14);
       return;
@@ -322,7 +322,7 @@ export default function HeartRateMonitor() {
 
     // Vertical gridlines at common BPM ticks.
     const ticks = [40, 60, 80, 100, 120, 150, 180, 220];
-    ctx.strokeStyle = "rgba(115,115,115,0.18)";
+    ctx.strokeStyle = "rgba(0,0,0,0.10)";
     ctx.lineWidth = 1;
     for (const bpm of ticks) {
       const x = bpmToX(bpm);
@@ -336,12 +336,12 @@ export default function HeartRateMonitor() {
     // Heart-rate band shading (under the curve).
     const bandX0 = ((HR_LO_HZ - lo) / (hi - lo)) * w;
     const bandX1 = ((HR_HI_HZ - lo) / (hi - lo)) * w;
-    ctx.fillStyle = "rgba(34, 211, 238, 0.06)";
+    ctx.fillStyle = "rgba(14, 116, 144, 0.08)";
     ctx.fillRect(bandX0, 0, bandX1 - bandX0, h - 14);
 
     // Spectrum curve.
-    ctx.strokeStyle = "#22d3ee";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#0e7490";
+    ctx.lineWidth = 1.25;
     ctx.beginPath();
     let started = false;
     for (let i = 0; i < freqs.length; i++) {
@@ -360,13 +360,13 @@ export default function HeartRateMonitor() {
 
     // Peak marker + numeric label.
     const peakX = bpmToX(peak.bpm);
-    ctx.strokeStyle = "#f43f5e";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#e11d48";
+    ctx.lineWidth = 1.25;
     ctx.beginPath();
     ctx.moveTo(peakX, 0);
     ctx.lineTo(peakX, h - 14);
     ctx.stroke();
-    ctx.fillStyle = "#fda4af";
+    ctx.fillStyle = "#be123c";
     ctx.font = "11px ui-sans-serif, system-ui";
     const peakLabel = `${peak.bpm.toFixed(1)} BPM`;
     const labelW = ctx.measureText(peakLabel).width;
@@ -374,7 +374,7 @@ export default function HeartRateMonitor() {
     ctx.fillText(peakLabel, labelX, 12);
 
     // Tick labels on the BPM axis.
-    ctx.fillStyle = "#a3a3a3";
+    ctx.fillStyle = "#525252";
     ctx.font = "10px ui-sans-serif, system-ui";
     ctx.textBaseline = "alphabetic";
     for (const bpm of ticks) {
@@ -481,14 +481,14 @@ export default function HeartRateMonitor() {
         </span>
       </header>
 
-      <p className="text-sm text-neutral-400 -mt-2">
+      <p className="text-sm text-neutral-600 -mt-2">
         Hold still in even lighting and look at the camera. The estimate
         stabilizes after about {WARMUP_SECONDS + WINDOW_SECONDS / 2}s.
       </p>
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-4">
-          <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-black border border-neutral-800">
+          <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-black border border-neutral-200">
             <video
               ref={videoRef}
               playsInline
@@ -535,7 +535,7 @@ export default function HeartRateMonitor() {
           {status === "running" && (
             <button
               onClick={stop}
-              className="self-start rounded-lg border border-neutral-700 hover:border-neutral-500 text-neutral-200 px-3 py-1.5 text-sm transition-colors"
+              className="self-start rounded-lg border border-neutral-300 hover:border-neutral-500 text-neutral-700 px-3 py-1.5 text-sm transition-colors"
             >
               Stop
             </button>
@@ -543,14 +543,14 @@ export default function HeartRateMonitor() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="rounded-xl border border-neutral-800 p-5 bg-neutral-950">
+          <div className="rounded-xl border border-neutral-200 p-5 bg-neutral-50">
             <div className="text-xs uppercase tracking-wider text-neutral-500">
               Heart rate
             </div>
             <div className="mt-1 flex items-baseline gap-3">
               <span
                 className={`text-6xl font-mono tabular-nums ${
-                  ready ? "text-cyan-300" : "text-neutral-600"
+                  ready ? "text-cyan-700" : "text-neutral-300"
                 }`}
               >
                 {bpm !== null ? bpm.toFixed(1) : "--"}
@@ -560,22 +560,22 @@ export default function HeartRateMonitor() {
             <div className="mt-3 text-xs text-neutral-500 flex gap-4">
               <span>
                 buffer{" "}
-                <span className="text-neutral-300 font-mono">
+                <span className="text-neutral-800 font-mono">
                   {(bufferFill * 100).toFixed(0)}%
                 </span>
               </span>
               <span>
                 snr{" "}
-                <span className="text-neutral-300 font-mono">
+                <span className="text-neutral-800 font-mono">
                   {snr ? snr.toFixed(1) : "--"}
                 </span>
               </span>
               <span>
                 source{" "}
-                <span className="text-neutral-300 font-mono">{sourceLabel}</span>
+                <span className="text-neutral-800 font-mono">{sourceLabel}</span>
               </span>
             </div>
-            <div className="mt-2 h-1 rounded-full bg-neutral-800 overflow-hidden">
+            <div className="mt-2 h-1 rounded-full bg-neutral-200 overflow-hidden">
               <div
                 className="h-full bg-cyan-500 transition-[width] duration-200"
                 style={{ width: `${bufferFill * 100}%` }}
@@ -583,7 +583,7 @@ export default function HeartRateMonitor() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 overflow-hidden">
+          <div className="rounded-xl border border-neutral-200 bg-neutral-50 overflow-hidden">
             <canvas
               ref={waveCanvasRef}
               width={520}
@@ -591,7 +591,7 @@ export default function HeartRateMonitor() {
               className="w-full block"
             />
           </div>
-          <div className="rounded-xl border border-neutral-800 bg-neutral-950 overflow-hidden">
+          <div className="rounded-xl border border-neutral-200 bg-neutral-50 overflow-hidden">
             <canvas
               ref={specCanvasRef}
               width={520}
@@ -602,8 +602,8 @@ export default function HeartRateMonitor() {
         </div>
       </div>
 
-      <details className="text-sm text-neutral-400">
-        <summary className="cursor-pointer text-neutral-300">How it works</summary>
+      <details className="text-sm text-neutral-600">
+        <summary className="cursor-pointer text-neutral-800">How it works</summary>
         <div className="mt-2 space-y-2">
           <p>
             MediaPipe Face Landmarker picks out forehead and cheek polygons each
@@ -613,7 +613,7 @@ export default function HeartRateMonitor() {
           </p>
           <p>
             The chrominance signal{" "}
-            <code className="font-mono text-neutral-200">G/⟨G⟩ − R/⟨R⟩</code>{" "}
+            <code className="font-mono text-neutral-900">G/⟨G⟩ − R/⟨R⟩</code>{" "}
             cancels common-mode lighting changes and highlights the small
             green-vs-red modulation caused by the pulse. It is resampled to{" "}
             {TARGET_FS} Hz, detrended, Hann-windowed and FFT-analysed. The peak
@@ -623,7 +623,7 @@ export default function HeartRateMonitor() {
           <p>
             If the face detector fails (no permission, unsupported, etc.) the
             page falls back to averaging the whole frame and reports{" "}
-            <span className="font-mono text-amber-300">whole frame</span>.
+            <span className="font-mono text-amber-600">whole frame</span>.
           </p>
         </div>
       </details>
